@@ -16,19 +16,15 @@ class App : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(DebugTree())
         }
-
-        initDagger()
     }
 
     companion object {
         lateinit var instance : App private set
-        lateinit var component : PostsComponent private set
-    }
-
-    private fun initDagger() {
-        component = DaggerPostsComponent
-                .builder()
-                .postsModule(PostsModule(this))
-                .build()
+        val component : PostsComponent by lazy {
+            DaggerPostsComponent
+                    .builder()
+                    .postsModule(PostsModule(App.instance))
+                    .build()
+        }
     }
 }

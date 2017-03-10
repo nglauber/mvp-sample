@@ -3,6 +3,7 @@ package br.com.nglauber.exemplolivro.model.persistence.web
 import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
+import br.com.nglauber.exemplolivro.BuildConfig
 import br.com.nglauber.exemplolivro.model.data.Post
 import br.com.nglauber.exemplolivro.model.persistence.PostDataSource
 import br.com.nglauber.exemplolivro.model.persistence.file.Media
@@ -23,10 +24,6 @@ class PostWeb(private val username : String?,
 
     val service : PostAPI
 
-    companion object {
-        val SERVER_PATH = "http://192.168.25.29/postservice/"
-    }
-
     init {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
@@ -39,7 +36,7 @@ class PostWeb(private val username : String?,
                 .create()
 
         val retrofit = Retrofit.Builder()
-                .baseUrl(SERVER_PATH)
+                .baseUrl(BuildConfig.SERVER_PATH)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(httpClient.build())
