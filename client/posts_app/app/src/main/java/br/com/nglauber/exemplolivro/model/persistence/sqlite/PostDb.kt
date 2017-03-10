@@ -7,11 +7,10 @@ import br.com.nglauber.exemplolivro.App
 import br.com.nglauber.exemplolivro.model.data.Post
 import br.com.nglauber.exemplolivro.model.persistence.PostDataSource
 import br.com.nglauber.exemplolivro.model.persistence.file.Media
+import io.reactivex.Observable
 import org.jetbrains.anko.db.*
-import rx.Observable
 import timber.log.Timber
 import java.io.File
-import java.util.*
 
 class PostDb(val dbHelper : DbHelper = DbHelper(App.instance)) : PostDataSource {
 
@@ -23,7 +22,7 @@ class PostDb(val dbHelper : DbHelper = DbHelper(App.instance)) : PostDataSource 
                 }
             })
         }
-        return Observable.from(posts)
+        return Observable.fromIterable(posts)
     }
 
     override fun loadPost(postId: Long) : Observable<Post> {

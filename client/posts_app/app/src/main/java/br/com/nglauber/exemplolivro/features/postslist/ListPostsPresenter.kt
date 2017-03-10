@@ -3,9 +3,9 @@ package br.com.nglauber.exemplolivro.features.postslist
 import br.com.nglauber.exemplolivro.App
 import br.com.nglauber.exemplolivro.model.persistence.PostDataSource
 import br.com.nglauber.exemplolivro.shared.binding.PostBinding
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -16,7 +16,7 @@ class ListPostsPresenter : ListPostsContract.Presenter {
     @Inject lateinit var dataSource: PostDataSource
 
     private lateinit var view: ListPostsContract.View
-    private val mSubscriptions = CompositeSubscription()
+    private val subscriptions = CompositeDisposable()
 
     init {
         App.component.inject(this)
@@ -26,7 +26,7 @@ class ListPostsPresenter : ListPostsContract.Presenter {
         val postsBindingList = ArrayList<PostBinding>()
         view.showProgress(true)
 
-        mSubscriptions.clear()
+        subscriptions.clear()
         val subscr =
             dataSource.loadPosts()
                 .subscribeOn(Schedulers.io())
@@ -46,7 +46,7 @@ class ListPostsPresenter : ListPostsContract.Presenter {
                             view.showEmptyView(postsBindingList.size == 0)
                         }
                 )
-        mSubscriptions.add(subscr)
+        subscriptions.add(subscr)
     }
 
     override fun subscribe() {
@@ -54,7 +54,7 @@ class ListPostsPresenter : ListPostsContract.Presenter {
     }
 
     override fun unsubscribe() {
-        mSubscriptions.clear()
+        subscriptions.clear()
     }
 
     override fun editPost(postId: Long) {

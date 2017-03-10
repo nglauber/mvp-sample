@@ -59,12 +59,12 @@ dependencies {
     compile "org.jetbrains.anko:anko-sqlite:$anko_version"
 
     // RX
-    compile 'io.reactivex:rxjava:1.2.5'
-    compile 'io.reactivex:rxandroid:1.2.1'
+    compile "io.reactivex.rxjava2:rxjava:$rxjava2_version"
+    compile "io.reactivex.rxjava2:rxandroid:$rxjava2_version"
 
     // Retrofit + GSON + Interceptor
-    compile "com.squareup.retrofit2:adapter-rxjava:$retrofit_version"
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
 

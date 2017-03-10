@@ -3,9 +3,9 @@ package br.com.nglauber.exemplolivro.features.postdetail
 import br.com.nglauber.exemplolivro.App
 import br.com.nglauber.exemplolivro.model.persistence.PostDataSource
 import br.com.nglauber.exemplolivro.shared.binding.PostBinding
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -14,7 +14,7 @@ class PostPresenter : PostContract.Presenter {
     @Inject lateinit var db: PostDataSource
 
     private lateinit var view: PostContract.View
-    private val mSubscriptions = CompositeSubscription()
+    private val subscriptions = CompositeDisposable()
 
     init {
         App.component.inject(this)
@@ -22,7 +22,7 @@ class PostPresenter : PostContract.Presenter {
 
     override fun loadPost(postId: Long) {
         view.showLoadingProgress(true)
-        mSubscriptions.clear()
+        subscriptions.clear()
         val subscr = db.loadPost(postId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -42,7 +42,7 @@ class PostPresenter : PostContract.Presenter {
                     view.showLoadError()
                     view.close()
                 })
-        mSubscriptions.add(subscr)
+        subscriptions.add(subscr)
     }
 
     override fun subscribe() {
@@ -50,7 +50,7 @@ class PostPresenter : PostContract.Presenter {
     }
 
     override fun unsubscribe() {
-        mSubscriptions.clear()
+        subscriptions.clear()
     }
 
     override fun selectImage() {

@@ -1,7 +1,7 @@
 package br.com.nglauber.exemplolivro.model.persistence
 
 import br.com.nglauber.exemplolivro.model.data.Post
-import rx.Observable
+import io.reactivex.Observable
 
 interface PostDataSource {
 

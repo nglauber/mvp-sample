@@ -8,15 +8,15 @@ import br.com.nglauber.exemplolivro.model.data.Post
 import br.com.nglauber.exemplolivro.model.persistence.PostDataSource
 import br.com.nglauber.exemplolivro.model.persistence.file.Media
 import com.google.gson.GsonBuilder
+import io.reactivex.Observable
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import rx.Observable
 import java.io.File
 
 class PostWeb(private val username : String?,
@@ -37,7 +37,7 @@ class PostWeb(private val username : String?,
 
         val retrofit = Retrofit.Builder()
                 .baseUrl(BuildConfig.SERVER_PATH)
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(httpClient.build())
                 .build()
@@ -50,7 +50,7 @@ class PostWeb(private val username : String?,
 
         return service.list(username)
                 .map { post -> post.map { it.toDomain() } }
-                .flatMap { posts -> Observable.from(posts) }
+                .flatMap { posts -> Observable.fromIterable(posts) }
     }
 
     override fun loadPost(postId: Long) : Observable<Post> {
