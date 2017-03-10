@@ -16,7 +16,7 @@ data class PostMapper(
     var longitude: Double
 ) {
     companion object {
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     }
 
     constructor(post : Post, username: String) : this(
@@ -35,3 +35,5 @@ data class PostMapper(
 }
 
 data class IdResult(var id : Long)
+
+data class UploadResult(var id : Long, var photoUrl : String)

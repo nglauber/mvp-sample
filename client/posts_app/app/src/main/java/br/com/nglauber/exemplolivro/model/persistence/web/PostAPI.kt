@@ -27,5 +27,5 @@ interface PostAPI {
     fun uploadPhoto(
             @Part("id") postId: RequestBody,
             @Part file: MultipartBody.Part
-    ): Call<IdResult>
+    ): Call<UploadResult>
 }

@@ -46,7 +46,7 @@ class PostsModule(private val application: App) {
 
     @Provides
     fun providesDataSource(user : User?) : PostDataSource {
-        return PostWeb(user?.name, application)
+        return PostWeb(user?.uuid, application)
     }
 
     @Provides

@@ -27,7 +27,7 @@ if ($_FILES["arquivo"]["error"] > 0) {
     $stmt->bind_param("si", $arquivo_destino, $id);
     $stmt->execute();
     $stmt->close();
-    $jsonRetorno = array("id"=>(int)$id);
+    $jsonRetorno = array("id"=>(int)$id, "photoUrl"=> $arquivo_destino);
 
     foreach($files as $file){
         if(is_file($file))

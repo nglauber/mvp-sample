@@ -46,7 +46,8 @@ class PostWeb(private val username : String?,
     }
 
     override fun loadPosts() : Observable<Post> {
-        if (username == null) throw IllegalStateException("User not authenticated")
+        if (username == null)
+            return Observable.error(IllegalStateException("User not authenticated"))
 
         return service.list(username)
                 .map { post -> post.map { it.toDomain() } }
@@ -54,14 +55,16 @@ class PostWeb(private val username : String?,
     }
 
     override fun loadPost(postId: Long) : Observable<Post> {
-        if (username == null) throw IllegalStateException("User not authenticated")
+        if (username == null)
+            return Observable.error(IllegalStateException("User not authenticated"))
 
         val postMapper = service.loadPost(postId, username)
         return postMapper.map{ post-> post?.toDomain() }
     }
 
     override fun savePost(post: Post): Observable<Long> {
-        if (username == null) throw IllegalStateException("User not authenticated")
+        if (username == null)
+            return Observable.error(IllegalStateException("User not authenticated"))
 
         val apiResult = if (post.id == 0L) {
             service.insert(PostMapper(post, username))
@@ -74,6 +77,7 @@ class PostWeb(private val username : String?,
                 post.id = idPost.id
                 if (!TextUtils.isEmpty(post.photoUrl) && post.photoUrl?.startsWith("http") == false) {
                     if (uploadFile(post)){
+
                         Observable.just(idPost.id)
                     } else {
                         Observable.error(RuntimeException("Fail to upload post image"))
@@ -106,11 +110,11 @@ class PostWeb(private val username : String?,
                     MediaType.parse(context.contentResolver.getType(Uri.parse(post.photoUrl))),
                     file
             )
-
             val body = MultipartBody.Part.createFormData("arquivo", file.getName(), requestFile)
             val description = RequestBody.create(MultipartBody.FORM, post.id.toString())
             val response = service.uploadPhoto(description, body).execute()
-            return response.isSuccessful
+            if (response.isSuccessful) post.photoUrl = "${BuildConfig.SERVER_PATH}${response.body().photoUrl}"
+            return file.delete() && response.isSuccessful
         }
         return false
     }
