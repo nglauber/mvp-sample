@@ -13,20 +13,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/post_list_empty"
-            layout="@layout/empty_list" />
-
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/post_list_swipe"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:onRefreshListener="@{()->presenter.loadPosts()}">
+            app:onRefreshListener="@{()->presenter.loadPosts(true)}">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/post_list_recyclerview"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/post_list_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <include
+                    android:id="@+id/post_list_empty"
+                    layout="@layout/empty_list" />
+            </FrameLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.design.widget.FloatingActionButton

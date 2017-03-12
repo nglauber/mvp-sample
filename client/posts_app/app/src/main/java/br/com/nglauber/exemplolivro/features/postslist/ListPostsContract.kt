@@ -11,7 +11,7 @@ interface ListPostsContract {
 
         fun editPost(postId : Long)
 
-        fun loadPosts()
+        fun loadPosts(ignoreCache : Boolean)
     }
 
     interface View : BaseContract.View {

@@ -24,13 +24,14 @@ class PostPresenter : PostContract.Presenter {
         view.showLoadingProgress(true)
         subscriptions.clear()
         val subscr = db.loadPost(postId)
+                .map(::PostBinding)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ post ->
+                .subscribe({ postBinding ->
                     view.showLoadingProgress(false)
 
-                    if (post != null) {
-                        view.showPost(PostBinding(post))
+                    if (postBinding != null) {
+                        view.showPost(postBinding)
                     } else {
                         view.showLoadError()
                         view.close()

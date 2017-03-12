@@ -38,10 +38,10 @@ class PostFragment : BaseFragment(), PostContract.View {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_post, container, false)
         mBinding.presenter = mPresenter
 
-        if (arguments.getLong(EXTRA_ID) > 0) {
+        if (arguments.getLong(EXTRA_ID) > 0 && mPost == null) {
             mPresenter.loadPost(arguments.getLong(EXTRA_ID))
         } else {
-            mPost = PostBinding()
+            mPost = mPost ?: PostBinding()
         }
 
         mBinding.post = mPost
@@ -112,6 +112,7 @@ class PostFragment : BaseFragment(), PostContract.View {
     override fun showSaveMessage(success: Boolean) {
         if (success){
             Toast.makeText(activity, R.string.post_message_save_success, Toast.LENGTH_SHORT).show()
+            activity.setResult(Activity.RESULT_OK)
             close()
         } else {
             Toast.makeText(activity, R.string.post_message_save_fail, Toast.LENGTH_SHORT).show()
@@ -121,6 +122,7 @@ class PostFragment : BaseFragment(), PostContract.View {
     override fun showDeleteMessage(success: Boolean) {
         if (success){
             Toast.makeText(activity, R.string.post_message_delete_success, Toast.LENGTH_SHORT).show()
+            activity.setResult(Activity.RESULT_OK)
             close()
         } else {
             Toast.makeText(activity, R.string.post_message_delete_fail, Toast.LENGTH_SHORT).show()

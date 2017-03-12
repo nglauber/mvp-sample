@@ -1,6 +1,7 @@
 package br.com.nglauber.exemplolivro.features.postslist
 
 
+import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
@@ -29,6 +30,7 @@ class ListPostsFragment : BaseFragment(), ListPostsContract.View {
         App.component.inject(this)
         mPresenter.attachView(this)
         super.onCreate(savedInstanceState) // TODO Find a better way to inject the superclass dependencies
+        retainInstance = true
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -45,22 +47,29 @@ class ListPostsFragment : BaseFragment(), ListPostsContract.View {
         return mBinding.root
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mPresenter.subscribe()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onDestroyView() {
+        super.onDestroyView()
         mPresenter.unsubscribe()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_POST && resultCode == Activity.RESULT_OK){
+            mPresenter.loadPosts(true)
+        }
+    }
+
     override fun addNewPost() {
-        startActivity(Intent(activity, PostActivity::class.java))
+        startActivityForResult(Intent(activity, PostActivity::class.java), REQUEST_POST)
     }
 
     override fun editPost(postId: Long) {
-        startActivity(Intent(activity, PostActivity::class.java).putExtra(PostActivity.EXTRA_ID, postId))
+        startActivityForResult(Intent(activity, PostActivity::class.java).putExtra(PostActivity.EXTRA_ID, postId), REQUEST_POST)
     }
 
     override fun showProgress(show: Boolean) {
@@ -82,4 +91,7 @@ class ListPostsFragment : BaseFragment(), ListPostsContract.View {
         Toast.makeText(activity, R.string.error_load_message, Toast.LENGTH_SHORT).show()
     }
 
+    companion object {
+        val REQUEST_POST = 1
+    }
 }
