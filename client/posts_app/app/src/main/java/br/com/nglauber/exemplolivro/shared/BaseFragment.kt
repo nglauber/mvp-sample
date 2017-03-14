@@ -9,21 +9,21 @@ import javax.inject.Inject
 
 open class BaseFragment : Fragment(), AuthContract.View {
 
-    @Inject lateinit var mAuthPresenter : AuthContract.Presenter
+    @Inject lateinit var authPresenter: AuthContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mAuthPresenter.attachView(this)
+        authPresenter.attachView(this)
     }
 
     override fun onResume() {
         super.onResume()
-        mAuthPresenter.subscribe()
+        authPresenter.subscribe()
     }
 
     override fun onPause() {
         super.onPause()
-        mAuthPresenter.unsubscribe()
+        authPresenter.unsubscribe()
     }
 
     override fun logoutView() {
@@ -31,4 +31,6 @@ open class BaseFragment : Fragment(), AuthContract.View {
         activity.finish()
         return
     }
+
+    fun isAuthenticated() : Boolean = authPresenter.isAuthenticated()
 }

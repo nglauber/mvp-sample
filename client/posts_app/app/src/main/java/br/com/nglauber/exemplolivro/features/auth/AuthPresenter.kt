@@ -8,7 +8,7 @@ import javax.inject.Inject
 class AuthPresenter : AuthContract.Presenter {
 
     private lateinit var view : AuthContract.View
-    @Inject lateinit var mAccessManager : AccessManager
+    @Inject lateinit var accessManager: AccessManager
 
     init {
         App.component.inject(this)
@@ -19,19 +19,23 @@ class AuthPresenter : AuthContract.Presenter {
     }
 
     override fun subscribe() {
-        if (mAccessManager.currentUser == null) {
+        if (!isAuthenticated()) {
             view.logoutView()
             return
         }
-        mAccessManager.addAccessChangedListener(mAuthListener)
+        accessManager.addAccessChangedListener(mAuthListener)
     }
 
     override fun unsubscribe() {
-        mAccessManager.removeAccessChangedListener(mAuthListener)
+        accessManager.removeAccessChangedListener(mAuthListener)
     }
 
     override fun performLogout() {
         AccessManager.instance.signOut()
+    }
+
+    override fun isAuthenticated(): Boolean {
+        return accessManager.currentUser != null
     }
 
     private val mAuthListener = object : AccessManager.AccessChangedListener {

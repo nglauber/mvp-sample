@@ -49,7 +49,8 @@ class ListPostsFragment : BaseFragment(), ListPostsContract.View {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mPresenter.subscribe()
+        if (isAuthenticated())
+            mPresenter.subscribe()
     }
 
     override fun onDestroyView() {

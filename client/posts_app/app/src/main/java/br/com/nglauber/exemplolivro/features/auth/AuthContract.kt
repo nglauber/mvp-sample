@@ -6,6 +6,8 @@ interface AuthContract {
 
     interface Presenter : BaseContract.Presenter<View> {
 
+        fun isAuthenticated() : Boolean
+
         fun performLogout()
     }
 
