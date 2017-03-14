@@ -3,10 +3,10 @@
 buildscript {
     ext.gradle_version = '2.3.0'
     ext.kotlin_version = '1.1.0'
-    ext.anko_version = '0.9'
-    ext.firebase_version = '9.6.1'
-    ext.appcompat_version = '25.0.0'
-    ext.playservices_version = '9.6.1'
+    ext.anko_version = '0.9.1'
+    ext.appcompat_version = '25.2.0'
+    ext.firebase_version = '10.2.0'
+    ext.playservices_version = '10.2.0'
     ext.retrofit_version = '2.2.0'
     ext.dagger_version = '2.10-rc2'
     ext.rxjava2_version = '2.0.1'
@@ -15,7 +15,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:$gradle_version"
+        classpath 'com.android.tools.build:gradle:2.3.0'
         classpath 'com.google.gms:google-services:3.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
