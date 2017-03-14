@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class PostPresenter : PostContract.Presenter {
 
-    @Inject lateinit var db: PostDataSource
+    @Inject lateinit var dataSource: PostDataSource
 
     private lateinit var view: PostContract.View
     private val subscriptions = CompositeDisposable()
@@ -23,7 +23,7 @@ class PostPresenter : PostContract.Presenter {
     override fun loadPost(postId: Long) {
         view.showLoadingProgress(true)
         subscriptions.clear()
-        val subscr = db.loadPost(postId)
+        val subscr = dataSource.loadPost(postId)
                 .map(::PostBinding)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -80,7 +80,7 @@ class PostPresenter : PostContract.Presenter {
 
     override fun savePost(postBinding: PostBinding) {
         view.showSavingProgress(true)
-        db.savePost(postBinding.post)
+        dataSource.savePost(postBinding.post)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->
@@ -98,7 +98,7 @@ class PostPresenter : PostContract.Presenter {
     }
 
     override fun deletePost(postBinding: PostBinding) {
-        db.deletePost(postBinding.post)
+        dataSource.deletePost(postBinding.post)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ result ->

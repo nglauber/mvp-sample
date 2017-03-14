@@ -14,30 +14,30 @@ import com.google.firebase.auth.GoogleAuthProvider
 import timber.log.Timber
 
 class GoogleAuth(private val mActivity: FragmentActivity) : Authentication {
-    private lateinit var mAuthListener: OnAuthRequestedListener
-    private val mAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private val mGoogleSignInOptions: GoogleSignInOptions
-    private val mGoogleApiClient: GoogleApiClient
-    private val mConnectionFailedListener: GoogleApiClient.OnConnectionFailedListener
+    private lateinit var authListener: OnAuthRequestedListener
+    private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private val googleSignInOptions: GoogleSignInOptions
+    private val googleApiClient: GoogleApiClient
+    private val connectionFailedListener: GoogleApiClient.OnConnectionFailedListener
 
     init {
-        mConnectionFailedListener = GoogleApiClient.OnConnectionFailedListener { mAuthListener.onAuthError() }
+        connectionFailedListener = GoogleApiClient.OnConnectionFailedListener { authListener.onAuthError() }
 
-        mGoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        googleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(mActivity.getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
 
-        mGoogleApiClient = GoogleApiClient.Builder(mActivity)
-                .enableAutoManage(mActivity, mConnectionFailedListener)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOptions)
+        googleApiClient = GoogleApiClient.Builder(mActivity)
+                .enableAutoManage(mActivity, connectionFailedListener)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
                 .build()
     }
 
     override fun startAuthProcess(l: OnAuthRequestedListener) {
-        mAuthListener = l
-        mGoogleApiClient.connect()
-        val signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient)
+        authListener = l
+        googleApiClient.connect()
+        val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
         mActivity.startActivityForResult(signInIntent, Authentication.TYPE_GOOGLE)
     }
 
@@ -49,16 +49,16 @@ class GoogleAuth(private val mActivity: FragmentActivity) : Authentication {
                 firebaseAuthWithGoogle(account)
             }
         } else {
-            mAuthListener.onAuthError()
+            authListener.onAuthError()
         }
-        mGoogleApiClient.disconnect()
+        googleApiClient.disconnect()
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Timber.d("firebaseAuthWithGoogle:" + acct.id!!)
 
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        mAuth.signInWithCredential(credential)
+        firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(mActivity) { task ->
                     Timber.d("signInWithCredential:onComplete:" + task.isSuccessful)
 
@@ -66,11 +66,11 @@ class GoogleAuth(private val mActivity: FragmentActivity) : Authentication {
                     // the auth state listener will be notified and logic to handle the
                     // signed in user can be handled in the listener.
                     if (task.isSuccessful) {
-                        mAuthListener.onAuthSuccess()
+                        authListener.onAuthSuccess()
 
                     } else {
                         Timber.d("signInWithCredential", task.exception)
-                        mAuthListener.onAuthError()
+                        authListener.onAuthError()
                     }
                 }
     }

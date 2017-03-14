@@ -5,39 +5,39 @@ import br.com.nglauber.exemplolivro.model.auth.OnAuthRequestedListener
 
 class LoginPresenter : LoginContract.Presenter {
 
-    private lateinit var mLoginView: LoginContract.View
-    private var mAuth: Authentication? = null
-    private val mAuthReqListener: OnAuthRequestedListener
+    private lateinit var view: LoginContract.View
+    private var authentication: Authentication? = null
+    private val authRequestedListener: OnAuthRequestedListener
 
     init {
-        mAuthReqListener = object : OnAuthRequestedListener {
+        authRequestedListener = object : OnAuthRequestedListener {
             override fun onAuthSuccess() {
-                mLoginView.showProgress(false)
-                mLoginView.showMainScreen()
+                view.showProgress(false)
+                view.showMainScreen()
             }
 
             override fun onAuthError() {
-                mLoginView.showProgress(false)
-                mLoginView.showLoginError()
+                view.showProgress(false)
+                view.showLoginError()
             }
 
             override fun onAuthCancel() {
-                mLoginView.showProgress(false)
+                view.showProgress(false)
             }
         }
     }
 
     override fun startAuthProcess(auth: Authentication) {
-        mAuth = auth
-        mLoginView.showProgress(true)
-        mAuth?.startAuthProcess(mAuthReqListener)
+        authentication = auth
+        view.showProgress(true)
+        authentication?.startAuthProcess(authRequestedListener)
     }
 
     override fun handleAuthResponse(requestCode: Int, resultCode: Int, data: Any) {
-        mAuth?.handleAuthResponse(requestCode, resultCode, data)
+        authentication?.handleAuthResponse(requestCode, resultCode, data)
     }
 
     override fun attachView(view: LoginContract.View) {
-        mLoginView = view
+        this.view = view
     }
 }

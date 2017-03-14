@@ -16,14 +16,14 @@ import timber.log.Timber
 import java.util.*
 
 class FacebookAuth(private val mActivity: FragmentActivity) : Authentication {
-    private lateinit var mAuthListener: OnAuthRequestedListener
-    private val mCallbackManager: CallbackManager = CallbackManager.Factory.create()
-    private val mAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
+    private lateinit var authListener: OnAuthRequestedListener
+    private val callbackManager: CallbackManager = CallbackManager.Factory.create()
+    private val firebaseAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
     override fun startAuthProcess(l: OnAuthRequestedListener) {
-        mAuthListener = l
+        authListener = l
         val lm = LoginManager.getInstance()
-        lm.registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
+        lm.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
                 Timber.d("facebook:onSuccess:" + loginResult)
                 handleFacebookAccessToken(loginResult.accessToken)
@@ -31,35 +31,35 @@ class FacebookAuth(private val mActivity: FragmentActivity) : Authentication {
 
             override fun onCancel() {
                 Timber.d("facebook:onAuthCancel")
-                mAuthListener.onAuthCancel()
+                authListener.onAuthCancel()
             }
 
             override fun onError(error: FacebookException) {
                 Timber.d("facebook:onError", error)
-                mAuthListener.onAuthError()
+                authListener.onAuthError()
             }
         })
         lm.logInWithReadPermissions(mActivity, Arrays.asList("email", "public_profile"))
     }
 
     override fun handleAuthResponse(requestCode: Int, resultCode: Int, data: Any) {
-        mCallbackManager.onActivityResult(requestCode, resultCode, data as Intent)
+        callbackManager.onActivityResult(requestCode, resultCode, data as Intent)
     }
 
     private fun handleFacebookAccessToken(token: AccessToken) {
         Timber.d("handleFacebookAccessToken:" + token)
 
         val credential = FacebookAuthProvider.getCredential(token.token)
-        mAuth.signInWithCredential(credential)
+        firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(mActivity) { task ->
                     Timber.d("signInWithCredential:onComplete:" + task.isSuccessful)
 
                     if (task.isSuccessful) {
-                        mAuthListener.onAuthSuccess()
+                        authListener.onAuthSuccess()
 
                     } else {
                         Timber.d( "signInWithCredential", task.exception)
-                        mAuthListener.onAuthError()
+                        authListener.onAuthError()
                     }
                 }
     }

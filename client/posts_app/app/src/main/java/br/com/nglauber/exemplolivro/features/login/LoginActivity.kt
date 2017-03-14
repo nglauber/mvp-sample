@@ -16,27 +16,27 @@ import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity(), LoginContract.View {
 
-    @Inject lateinit var mPresenter: LoginContract.Presenter
+    @Inject lateinit var presenter: LoginContract.Presenter
 
-    private var mBinding: ActivityLoginBinding? = null
+    private var binding: ActivityLoginBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.component.inject(this)
-        mPresenter.attachView(this)
+        presenter.attachView(this)
 
-        mBinding = DataBindingUtil.setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
-        mBinding?.loginGoogleSignIn?.setOnClickListener { mPresenter.startAuthProcess(GoogleAuth(this@LoginActivity)) }
-        mBinding?.loginFacebookSignIn?.setOnClickListener { mPresenter.startAuthProcess(FacebookAuth(this@LoginActivity)) }
+        binding = DataBindingUtil.setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
+        binding?.loginGoogleSignIn?.setOnClickListener { presenter.startAuthProcess(GoogleAuth(this@LoginActivity)) }
+        binding?.loginFacebookSignIn?.setOnClickListener { presenter.startAuthProcess(FacebookAuth(this@LoginActivity)) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
-        mPresenter.handleAuthResponse(requestCode, resultCode, data)
+        presenter.handleAuthResponse(requestCode, resultCode, data)
     }
 
     override fun showProgress(show: Boolean) {
-        mBinding?.loginProgress?.visibility = if (show) View.VISIBLE else View.GONE
+        binding?.loginProgress?.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun showLoginError() {

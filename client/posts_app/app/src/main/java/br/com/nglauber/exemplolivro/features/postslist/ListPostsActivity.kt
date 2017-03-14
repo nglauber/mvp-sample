@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class ListPostsActivity : BaseActivity(), AuthContract.View {
 
-    @Inject lateinit var mAuthPresenter : AuthContract.Presenter
+    @Inject lateinit var presenter: AuthContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,7 @@ class ListPostsActivity : BaseActivity(), AuthContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.menu_main_logout){
-            mAuthPresenter.performLogout()
+            presenter.performLogout()
         }
         return super.onOptionsItemSelected(item)
     }

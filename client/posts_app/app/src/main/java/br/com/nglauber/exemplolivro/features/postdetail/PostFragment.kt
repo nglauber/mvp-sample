@@ -21,14 +21,14 @@ import javax.inject.Inject
 
 class PostFragment : BaseFragment(), PostContract.View {
 
-    @Inject lateinit var mPresenter: PostContract.Presenter
+    @Inject lateinit var presenter: PostContract.Presenter
 
-    private var mPost : PostBinding? = null
+    private var post: PostBinding? = null
     private lateinit var mBinding: FragmentPostBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.component.inject(this)
-        mPresenter.attachView(this)
+        presenter.attachView(this)
         super.onCreate(savedInstanceState)
         retainInstance = true
     }
@@ -36,15 +36,15 @@ class PostFragment : BaseFragment(), PostContract.View {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_post, container, false)
-        mBinding.presenter = mPresenter
+        mBinding.presenter = presenter
 
-        if (arguments.getLong(EXTRA_ID) > 0 && mPost == null) {
-            mPresenter.loadPost(arguments.getLong(EXTRA_ID))
+        if (arguments.getLong(EXTRA_ID) > 0 && post == null) {
+            presenter.loadPost(arguments.getLong(EXTRA_ID))
         } else {
-            mPost = mPost ?: PostBinding()
+            post = post ?: PostBinding()
         }
 
-        mBinding.post = mPost
+        mBinding.post = post
         return mBinding.root
     }
 
@@ -53,12 +53,12 @@ class PostFragment : BaseFragment(), PostContract.View {
         if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == REQUEST_GALLERY) {
-                mPresenter.updateImage(data?.data.toString())
+                presenter.updateImage(data?.data.toString())
 
             } else if (requestCode == REQUEST_PLACE) {
                 val place = PlaceAutocomplete.getPlace(activity, data)
                 val latLng = place.latLng
-                mPresenter.updateLocation(latLng.latitude, latLng.longitude)
+                presenter.updateLocation(latLng.latitude, latLng.longitude)
             }
         }
     }
@@ -87,8 +87,8 @@ class PostFragment : BaseFragment(), PostContract.View {
     }
 
     override fun showPost(postBinding: PostBinding) {
-        mPost = postBinding
-        mBinding.post = mPost
+        post = postBinding
+        mBinding.post = post
     }
 
     override fun showImage(uri: String) {

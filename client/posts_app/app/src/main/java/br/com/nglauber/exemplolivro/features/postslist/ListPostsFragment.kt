@@ -22,46 +22,46 @@ import javax.inject.Inject
 
 class ListPostsFragment : BaseFragment(), ListPostsContract.View {
 
-    @Inject lateinit var mPresenter: ListPostsContract.Presenter
+    @Inject lateinit var presenter: ListPostsContract.Presenter
 
-    private lateinit var mBinding: FragmentListPostsBinding
+    private lateinit var binding: FragmentListPostsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.component.inject(this)
-        mPresenter.attachView(this)
+        presenter.attachView(this)
         super.onCreate(savedInstanceState) // TODO Find a better way to inject the superclass dependencies
         retainInstance = true
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        mBinding = DataBindingUtil.inflate<FragmentListPostsBinding>(
+        binding = DataBindingUtil.inflate<FragmentListPostsBinding>(
                 inflater, R.layout.fragment_list_posts, container, false)
-        mBinding.presenter = mPresenter
-        mBinding.postListRecyclerview?.layoutManager =
+        binding.presenter = presenter
+        binding.postListRecyclerview?.layoutManager =
                 if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
                     LinearLayoutManager(activity)
                 else
                     GridLayoutManager(activity, 2)
 
-        return mBinding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (isAuthenticated())
-            mPresenter.subscribe()
+            presenter.subscribe()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mPresenter.unsubscribe()
+        presenter.unsubscribe()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_POST && resultCode == Activity.RESULT_OK){
-            mPresenter.loadPosts(true)
+            presenter.loadPosts(true)
         }
     }
 
@@ -74,18 +74,18 @@ class ListPostsFragment : BaseFragment(), ListPostsContract.View {
     }
 
     override fun showProgress(show: Boolean) {
-        mBinding.postListSwipe?.isRefreshing = show
+        binding.postListSwipe?.isRefreshing = show
     }
 
     override fun updateList(posts: List<PostBinding>) {
         val adapter = ListPostsAdapter(posts, {
-            mPresenter.editPost(it.id)
+            presenter.editPost(it.id)
         })
-        mBinding.postListRecyclerview?.adapter = adapter
+        binding.postListRecyclerview?.adapter = adapter
     }
 
     override fun showEmptyView(visible : Boolean) {
-        mBinding.postListEmpty?.emptyRoot?.visibility = if (visible) View.VISIBLE else View.GONE
+        binding.postListEmpty?.emptyRoot?.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun showLoadErrorMessage() {

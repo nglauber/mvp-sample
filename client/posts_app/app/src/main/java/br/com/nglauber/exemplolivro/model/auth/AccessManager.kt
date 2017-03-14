@@ -6,18 +6,18 @@ import java.util.*
 
 class AccessManager private constructor() {
 
-    private val mCallbacks: MutableMap<AccessChangedListener, WeakReference<FirebaseAuth.AuthStateListener>>
-    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val callbacks: MutableMap<AccessChangedListener, WeakReference<FirebaseAuth.AuthStateListener>>
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     init {
-        mCallbacks = HashMap<AccessChangedListener, WeakReference<FirebaseAuth.AuthStateListener>>()
+        callbacks = HashMap<AccessChangedListener, WeakReference<FirebaseAuth.AuthStateListener>>()
     }
 
     var currentUser: User? = null
         private set
         get() {
             var appUser: User? = null
-            val user = mAuth.currentUser
+            val user = firebaseAuth.currentUser
             if (user != null) {
                 appUser = User(
                         user.displayName,
@@ -33,20 +33,20 @@ class AccessManager private constructor() {
             val user = firebaseAuth.currentUser
             accessChangedListener.accessChanged(user != null)
         }
-        mAuth.addAuthStateListener(auth)
-        mCallbacks.put(accessChangedListener, WeakReference(auth))
+        firebaseAuth.addAuthStateListener(auth)
+        callbacks.put(accessChangedListener, WeakReference(auth))
     }
 
     fun removeAccessChangedListener(accessChangedListener: AccessChangedListener) {
-        val listener = mCallbacks[accessChangedListener]?.get()
+        val listener = callbacks[accessChangedListener]?.get()
         if (listener != null) {
-            mAuth.removeAuthStateListener(listener)
-            mCallbacks.remove(accessChangedListener)
+            firebaseAuth.removeAuthStateListener(listener)
+            callbacks.remove(accessChangedListener)
         }
     }
 
     fun signOut() {
-        mAuth.signOut()
+        firebaseAuth.signOut()
     }
 
     interface AccessChangedListener {
