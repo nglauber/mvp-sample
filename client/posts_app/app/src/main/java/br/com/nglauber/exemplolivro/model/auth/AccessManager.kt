@@ -14,6 +14,7 @@ class AccessManager private constructor() {
     }
 
     var currentUser: User? = null
+        private set
         get() {
             var appUser: User? = null
             val user = mAuth.currentUser
