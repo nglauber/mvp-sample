@@ -1,4 +1,4 @@
-package br.com.nglauber.exemplolivro
+package br.com.nglauber.exemplolivro.unit
 
 import android.provider.MediaStore
 import android.provider.MediaStore.Images.ImageColumns
