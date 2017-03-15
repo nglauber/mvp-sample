@@ -55,8 +55,8 @@ open class PostsModule(private val application: Application) {
     fun provideUser() : User? = AccessManager.instance.getCurrentUser()
 
     @Provides
-    fun provideListPostsPresenter() : ListPostsContract.Presenter {
-        return ListPostsPresenter()
+    fun provideListPostsPresenter(dataSource : PostDataSource) : ListPostsContract.Presenter {
+        return ListPostsPresenter(dataSource)
     }
 
     @Provides

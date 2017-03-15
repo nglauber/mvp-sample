@@ -4,6 +4,7 @@ import br.com.nglauber.exemplolivro.App
 import br.com.nglauber.exemplolivro.model.persistence.PostDataSource
 import br.com.nglauber.exemplolivro.shared.binding.PostBinding
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -12,9 +13,11 @@ import java.util.*
 import javax.inject.Inject
 
 
-class ListPostsPresenter : ListPostsContract.Presenter {
-
-    @Inject lateinit var dataSource: PostDataSource
+class ListPostsPresenter @Inject constructor(
+        var dataSource: PostDataSource,
+        val subscriberScheduler : Scheduler = Schedulers.io(),
+        val observerScheduler : Scheduler = AndroidSchedulers.mainThread())
+    : ListPostsContract.Presenter {
 
     private lateinit var view: ListPostsContract.View
     private val subscriptions = CompositeDisposable()
@@ -37,8 +40,8 @@ class ListPostsPresenter : ListPostsContract.Presenter {
                     .cache()
         }
         val subscr = listPostsObs!!
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(subscriberScheduler)
+                .observeOn(observerScheduler)
                 .subscribe(
                         { postBinding ->
                             postsBindingList.add(postBinding)

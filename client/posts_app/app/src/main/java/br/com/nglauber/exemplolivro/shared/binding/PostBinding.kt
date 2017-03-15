@@ -98,4 +98,10 @@ class PostBinding(val post: Post = Post()) : BaseObservable() {
         get() {
             return if (photoUrl.isNullOrEmpty()) locationUrl else photoUrl
         }
+
+    override fun equals(other: Any?): Boolean {
+        return (other != null && other is PostBinding && this.post == other.post)
+    }
+
+    override fun hashCode(): Int = post.hashCode()
 }

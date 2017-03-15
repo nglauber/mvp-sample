@@ -74,6 +74,7 @@ dependencies {
     // Timber
     compile 'com.jakewharton.timber:timber:4.5.1'
 
+    // Automation Tests dependencies ---------------------------------------------------------------
     androidTestCompile("com.android.support.test.espresso:espresso-core:$espresso_version", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -83,10 +84,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'design'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
+    androidTestCompile 'org.mockito:mockito-android:2.6.3'
+
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     kaptAndroidTest "com.android.databinding:compiler:$gradle_version"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
 
+    // Unit Tests dependencies ---------------------------------------------------------------------
     testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     testCompile 'junit:junit:4.12'
