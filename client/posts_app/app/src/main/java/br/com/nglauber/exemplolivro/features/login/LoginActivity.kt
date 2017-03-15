@@ -22,7 +22,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        App.component.inject(this)
+        App.instance.component.inject(this)
         presenter.attachView(this)
 
         binding = DataBindingUtil.setContentView<ActivityLoginBinding>(this, R.layout.activity_login)

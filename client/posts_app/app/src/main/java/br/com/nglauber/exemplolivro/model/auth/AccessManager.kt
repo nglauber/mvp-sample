@@ -1,36 +1,27 @@
 package br.com.nglauber.exemplolivro.model.auth
 
+import br.com.nglauber.exemplolivro.App
 import com.google.firebase.auth.FirebaseAuth
 import java.lang.ref.WeakReference
 import java.util.*
+import javax.inject.Inject
 
 class AccessManager private constructor() {
 
+    @Inject lateinit var session : Session
     private val callbacks: MutableMap<AccessChangedListener, WeakReference<FirebaseAuth.AuthStateListener>>
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     init {
         callbacks = HashMap<AccessChangedListener, WeakReference<FirebaseAuth.AuthStateListener>>()
+        App.instance.component.inject(this)
     }
 
-    var currentUser: User? = null
-        private set
-        get() {
-            var appUser: User? = null
-            val user = firebaseAuth.currentUser
-            if (user != null) {
-                appUser = User(
-                        user.displayName,
-                        user.email,
-                        if (user.photoUrl != null) user.photoUrl.toString() else null,
-                        user.uid)
-            }
-            return appUser
-        }
+    fun getCurrentUser() : User? = session.getCurrentUser()
 
     fun addAccessChangedListener(accessChangedListener: AccessChangedListener) {
-        val auth = FirebaseAuth.AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
+        val auth = FirebaseAuth.AuthStateListener {
+            val user = session.getCurrentUser()
             accessChangedListener.accessChanged(user != null)
         }
         firebaseAuth.addAuthStateListener(auth)

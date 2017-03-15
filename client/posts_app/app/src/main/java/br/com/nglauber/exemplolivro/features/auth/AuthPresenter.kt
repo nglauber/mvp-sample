@@ -11,7 +11,7 @@ class AuthPresenter : AuthContract.Presenter {
     @Inject lateinit var accessManager: AccessManager
 
     init {
-        App.component.inject(this)
+        App.instance.component.inject(this)
     }
 
     override fun attachView(view: AuthContract.View) {
@@ -35,7 +35,7 @@ class AuthPresenter : AuthContract.Presenter {
     }
 
     override fun isAuthenticated(): Boolean {
-        return accessManager.currentUser != null
+        return accessManager.getCurrentUser() != null
     }
 
     private val mAuthListener = object : AccessManager.AccessChangedListener {

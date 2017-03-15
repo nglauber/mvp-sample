@@ -17,7 +17,7 @@ class PostPresenter : PostContract.Presenter {
     private val subscriptions = CompositeDisposable()
 
     init {
-        App.component.inject(this)
+        App.instance.component.inject(this)
     }
 
     override fun loadPost(postId: Long) {

@@ -20,6 +20,7 @@ android {
 
     dataBinding {
         enabled true
+        enabledForTests true
     }
 
     buildTypes {
@@ -73,16 +74,17 @@ dependencies {
     // Timber
     compile 'com.jakewharton.timber:timber:4.5.1'
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$espresso_version", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$espresso_version", {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'design'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    kaptAndroidTest "com.android.databinding:compiler:$gradle_version"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
 
     testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

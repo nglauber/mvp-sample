@@ -24,10 +24,10 @@ class PostFragment : BaseFragment(), PostContract.View {
     @Inject lateinit var presenter: PostContract.Presenter
 
     private var post: PostBinding? = null
-    private lateinit var mBinding: FragmentPostBinding
+    private lateinit var binding: FragmentPostBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        App.component.inject(this)
+        App.instance.component.inject(this)
         presenter.attachView(this)
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -35,8 +35,8 @@ class PostFragment : BaseFragment(), PostContract.View {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_post, container, false)
-        mBinding.presenter = presenter
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_post, container, false)
+        binding.presenter = presenter
 
         if (arguments.getLong(EXTRA_ID) > 0 && post == null) {
             presenter.loadPost(arguments.getLong(EXTRA_ID))
@@ -44,8 +44,8 @@ class PostFragment : BaseFragment(), PostContract.View {
             post = post ?: PostBinding()
         }
 
-        mBinding.post = post
-        return mBinding.root
+        binding.post = post
+        return binding.root
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -88,25 +88,25 @@ class PostFragment : BaseFragment(), PostContract.View {
 
     override fun showPost(postBinding: PostBinding) {
         post = postBinding
-        mBinding.post = post
+        binding.post = post
     }
 
     override fun showImage(uri: String) {
-        mBinding.post?.photoUrl = uri
+        binding.post?.photoUrl = uri
     }
 
     override fun showLocation(latitude: Double, longitude: Double) {
-        mBinding.post?.latitude = latitude
-        mBinding.post?.longitude = longitude
+        binding.post?.latitude = latitude
+        binding.post?.longitude = longitude
     }
 
     override fun hideImage() {
-        mBinding.post?.photoUrl = null
+        binding.post?.photoUrl = null
     }
 
     override fun hideLocation() {
-        mBinding.post?.latitude = 0.0
-        mBinding.post?.longitude = 0.0
+        binding.post?.latitude = 0.0
+        binding.post?.longitude = 0.0
     }
 
     override fun showSaveMessage(success: Boolean) {
@@ -130,14 +130,14 @@ class PostFragment : BaseFragment(), PostContract.View {
     }
 
     override fun showLoadingProgress(visible: Boolean) {
-        mBinding.postSaving?.postSavingText?.text = getString(R.string.text_loading_post)
-        mBinding.postSaving?.postSavingRoot?.visibility = if (visible) View.VISIBLE else View.GONE
+        binding.postSaving?.postSavingText?.text = getString(R.string.text_loading_post)
+        binding.postSaving?.postSavingRoot?.visibility = if (visible) View.VISIBLE else View.GONE
 
     }
 
     override fun showSavingProgress(visible: Boolean) {
-        mBinding.postSaving?.postSavingText?.text = getString(R.string.text_saving_post)
-        mBinding.postSaving?.postSavingRoot?.visibility = if (visible) View.VISIBLE else View.GONE
+        binding.postSaving?.postSavingText?.text = getString(R.string.text_saving_post)
+        binding.postSaving?.postSavingRoot?.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun showLoadError() {

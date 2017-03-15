@@ -7,6 +7,7 @@ import br.com.nglauber.exemplolivro.features.postdetail.PostPresenter
 import br.com.nglauber.exemplolivro.features.postslist.ListPostsActivity
 import br.com.nglauber.exemplolivro.features.postslist.ListPostsFragment
 import br.com.nglauber.exemplolivro.features.postslist.ListPostsPresenter
+import br.com.nglauber.exemplolivro.model.auth.AccessManager
 import br.com.nglauber.exemplolivro.shared.BaseFragment
 import dagger.Component
 import javax.inject.Singleton
@@ -30,4 +31,6 @@ interface PostsComponent {
     fun inject(presenter : PostPresenter)
 
     fun inject(fragment : PostFragment)
+
+    fun inject(accessManager: AccessManager)
 }

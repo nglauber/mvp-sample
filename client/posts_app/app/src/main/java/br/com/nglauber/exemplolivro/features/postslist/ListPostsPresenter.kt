@@ -21,7 +21,7 @@ class ListPostsPresenter : ListPostsContract.Presenter {
     private var listPostsObs : Observable<PostBinding>? = null
 
     init {
-        App.component.inject(this)
+        App.instance.component.inject(this)
     }
 
     override fun loadPosts(ignoreCache: Boolean) {

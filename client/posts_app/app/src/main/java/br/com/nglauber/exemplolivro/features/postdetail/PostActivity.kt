@@ -1,9 +1,7 @@
 package br.com.nglauber.exemplolivro.features.postdetail
 
-import android.databinding.DataBindingUtil.setContentView
 import android.os.Bundle
 import br.com.nglauber.exemplolivro.R
-import br.com.nglauber.exemplolivro.features.postdetail.PostFragment
 import br.com.nglauber.exemplolivro.shared.BaseActivity
 
 class PostActivity : BaseActivity() {

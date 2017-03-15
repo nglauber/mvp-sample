@@ -1,16 +1,19 @@
 package br.com.nglauber.exemplolivro.ui
 
 
+import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
-import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
+import android.support.test.espresso.contrib.RecyclerViewActions.actionOnItem
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.support.v7.widget.RecyclerView
-import android.view.View
+import br.com.nglauber.exemplolivro.App
 import br.com.nglauber.exemplolivro.R
 import br.com.nglauber.exemplolivro.features.postslist.ListPostsActivity
+import br.com.nglauber.exemplolivro.mock.DaggerTestComponent
+import br.com.nglauber.exemplolivro.mock.TestModule
 import org.hamcrest.Matchers.allOf
 import org.junit.Rule
 import org.junit.Test
@@ -20,44 +23,63 @@ import org.junit.runner.RunWith
 class TestCrud {
 
     @get:Rule
-    var mActivityTestRule = ActivityTestRule(ListPostsActivity::class.java)
+    var activityTestRule = object : ActivityTestRule<ListPostsActivity>(ListPostsActivity::class.java) {
+        override fun beforeActivityLaunched() {
+            super.beforeActivityLaunched()
+            val application : App = (InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as App)
+
+            val component = DaggerTestComponent.builder()
+                    .testModule(TestModule(application))
+                    .build()
+
+            application.component = component
+        }
+    }
 
     @Test
     fun testCrud() {
-        onView(allOf<View>(withId(R.id.post_list_fab),
-                withParent(allOf<View>(withId(R.id.post_list_fragment),
-                        withParent(withId(R.id.activity_main)))), isDisplayed()))
-                .perform(click())
+        val initialText = "Text original"
+        val newText = "Text modified"
 
-        onView(withId(R.id.post_edit_text))
-                .perform(scrollTo(), replaceText("abc"), closeSoftKeyboard())
+        // INSERT
+        clickNewPost()
+        typePostText(initialText)
+        clickSave()
 
-        onView(allOf<View>(withId(R.id.post_button_save), withText("Save")))
-                .perform(scrollTo(), click())
+        // EDIT
+        clickListItem(initialText)
+        typePostText(newText)
+        clickSave()
 
-        onView(allOf<View>(withId(R.id.post_list_recyclerview), isDisplayed()))
-                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+        // DELETE
+        clickListItem(newText)
+        clickDelete()
+    }
 
-        waitFor(1000)
+    fun clickNewPost(){
+        onView(allOf(withId(R.id.post_list_fab),
+                withParent(allOf(withId(R.id.post_list_fragment),
+                        withParent(withId(R.id.activity_main)))),
+                isDisplayed())).perform(click())
+    }
 
-        onView(allOf<View>(withId(R.id.post_edit_text), withText("abc")))
-                .perform(scrollTo(), click())
+    fun typePostText(text : String){
+        onView(allOf(withId(R.id.post_edit_text), isDisplayed()))
+                .perform(scrollTo(), replaceText(text))
+    }
 
-        onView(allOf<View>(withId(R.id.post_edit_text), withText("abc")))
-                .perform(scrollTo(), replaceText("abcdef"), closeSoftKeyboard())
-
-        onView(allOf<View>(withId(R.id.post_button_save), withText("Save")))
-                .perform(scrollTo(), click())
-
-        onView(allOf<View>(withId(R.id.post_list_recyclerview), isDisplayed()))
-                .perform(actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
-
-        onView(allOf<View>(withId(R.id.post_button_delete), withText("Delete")))
+    fun clickSave() {
+        onView(allOf(withId(R.id.post_button_save), isDisplayed()))
                 .perform(scrollTo(), click())
     }
 
-    fun waitFor(time: Long) {
-        Thread.sleep(time)
+    fun clickListItem(text : String) {
+        onView(allOf(withId(R.id.post_list_recyclerview), isDisplayed()))
+                .perform(actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText(text)), click()))
     }
 
+    fun clickDelete(){
+        onView(allOf(withId(R.id.post_button_delete), isDisplayed()))
+                .perform(scrollTo(), click())
+    }
 }

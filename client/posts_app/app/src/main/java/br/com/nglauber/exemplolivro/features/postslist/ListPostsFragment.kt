@@ -27,7 +27,7 @@ class ListPostsFragment : BaseFragment(), ListPostsContract.View {
     private lateinit var binding: FragmentListPostsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        App.component.inject(this)
+        App.instance.component.inject(this)
         presenter.attachView(this)
         super.onCreate(savedInstanceState) // TODO Find a better way to inject the superclass dependencies
         retainInstance = true

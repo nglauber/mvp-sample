@@ -18,7 +18,7 @@ class ListPostsActivity : BaseActivity(), AuthContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        App.component.inject(this)
+        App.instance.component.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
