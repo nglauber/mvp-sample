@@ -21,7 +21,7 @@ class ListPostsPresenter @Inject constructor(
 
     private lateinit var view: ListPostsContract.View
     private val subscriptions = CompositeDisposable()
-    private var listPostsObs : Observable<PostBinding>? = null
+    private var listPosts : MutableList<PostBinding>? = null
 
     init {
         App.instance.component.inject(this)
@@ -32,14 +32,18 @@ class ListPostsPresenter @Inject constructor(
         view.showProgress(true)
 
         subscriptions.clear()
-        if (ignoreCache) listPostsObs = null
+        if (ignoreCache) listPosts = null
 
-        if (listPostsObs == null){
+        val listPostsObs : Observable<PostBinding>
+        if (ignoreCache || listPosts == null){
+            listPosts = mutableListOf<PostBinding>()
             listPostsObs = dataSource.loadPosts()
                     .map(::PostBinding)
-                    .cache()
+                    .doOnNext { listPosts?.add(it) }
+        } else {
+            listPostsObs = Observable.fromIterable(listPosts)
         }
-        val subscr = listPostsObs!!
+        val subscr = listPostsObs
                 .subscribeOn(subscriberScheduler)
                 .observeOn(observerScheduler)
                 .subscribe(
