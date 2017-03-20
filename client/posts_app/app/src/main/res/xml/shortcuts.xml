@@ -1,0 +1,19 @@
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="new_post"
+        android:enabled="true"
+        android:icon="@drawable/ic_add"
+        android:shortcutShortLabel="@string/shortcut_newpost_shortlabel"
+        android:shortcutLongLabel="@string/shortcut_newpost_longlabel">
+        <!-- TODO it's weird declare all the activity stack once we've declared the parent activity... -->
+        <intent
+            android:action="android.intent.action.ACTION_MAIN"
+            android:targetPackage="br.com.nglauber.exemplolivro"
+            android:targetClass="br.com.nglauber.exemplolivro.features.postslist.ListPostsActivity" />
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="br.com.nglauber.exemplolivro"
+            android:targetClass="br.com.nglauber.exemplolivro.features.postdetail.PostActivity" />
+    </shortcut>
+</shortcuts>
+

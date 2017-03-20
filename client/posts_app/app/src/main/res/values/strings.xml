@@ -21,4 +21,7 @@
     <string name="text_saving_post">Saving post…</string>
     <string name="text_loading_post">Loading post…</string>
     <string name="menu_logout">Logout</string>
+
+    <string name="shortcut_newpost_shortlabel">Add</string>
+    <string name="shortcut_newpost_longlabel">Add a new post</string>
 </resources>
