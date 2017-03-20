@@ -60,8 +60,8 @@ open class PostsModule(private val application: Application) {
     }
 
     @Provides
-    fun providePostPresenter() : PostContract.Presenter {
-        return PostPresenter()
+    fun providePostPresenter(dataSource : PostDataSource) : PostContract.Presenter {
+        return PostPresenter(dataSource)
     }
 
     @Provides

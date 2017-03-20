@@ -3,15 +3,18 @@ package br.com.nglauber.exemplolivro.features.postdetail
 import br.com.nglauber.exemplolivro.App
 import br.com.nglauber.exemplolivro.model.persistence.PostDataSource
 import br.com.nglauber.exemplolivro.shared.binding.PostBinding
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
-class PostPresenter : PostContract.Presenter {
-
-    @Inject lateinit var dataSource: PostDataSource
+class PostPresenter @Inject constructor(
+        var dataSource: PostDataSource,
+        val subscriberScheduler : Scheduler = Schedulers.io(),
+        val observerScheduler : Scheduler = AndroidSchedulers.mainThread())
+    : PostContract.Presenter {
 
     private lateinit var view: PostContract.View
     private val subscriptions = CompositeDisposable()
@@ -25,8 +28,8 @@ class PostPresenter : PostContract.Presenter {
         subscriptions.clear()
         val subscr = dataSource.loadPost(postId)
                 .map(::PostBinding)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(subscriberScheduler)
+                .observeOn(observerScheduler)
                 .subscribe({ postBinding ->
                     view.showLoadingProgress(false)
 
@@ -81,8 +84,8 @@ class PostPresenter : PostContract.Presenter {
     override fun savePost(postBinding: PostBinding) {
         view.showSavingProgress(true)
         dataSource.savePost(postBinding.post)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(subscriberScheduler)
+                .observeOn(observerScheduler)
                 .subscribe({ result ->
                     val success = result != 0L
                     view.showSavingProgress(false)
@@ -99,8 +102,8 @@ class PostPresenter : PostContract.Presenter {
 
     override fun deletePost(postBinding: PostBinding) {
         dataSource.deletePost(postBinding.post)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(subscriberScheduler)
+                .observeOn(observerScheduler)
                 .subscribe({ result ->
                     view.showDeleteMessage(result)
                     if (result)
