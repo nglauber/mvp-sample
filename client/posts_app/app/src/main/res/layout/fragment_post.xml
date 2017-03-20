@@ -97,6 +97,7 @@
                         android:drawableLeft="@drawable/ic_done"
                         android:drawableStart="@drawable/ic_done"
                         android:onClick="@{()->presenter.savePost(post)}"
+                        android:enabled="@{post.text.length() > 0}"
                         android:text="@string/menu_post_save" />
                 </RelativeLayout>
 
