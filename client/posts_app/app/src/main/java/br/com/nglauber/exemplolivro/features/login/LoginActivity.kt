@@ -36,6 +36,8 @@ class LoginActivity : AppCompatActivity(), LoginContract.View {
     }
 
     override fun showProgress(show: Boolean) {
+        binding?.loginGoogleSignIn?.isEnabled = !show
+        binding?.loginFacebookSignIn?.isEnabled = !show
         binding?.loginProgress?.visibility = if (show) View.VISIBLE else View.GONE
     }
 

@@ -22,6 +22,16 @@
     <string name="text_loading_post">Loading post…</string>
     <string name="menu_logout">Logout</string>
 
+    <string name="content_description_itempost_nothumbnail">No thumbnail</string>
+    <string name="content_description_itempost_thumbnail">Thumbnail</string>
+    <string name="content_description_listposts_empty">Empty list</string>
+    <string name="content_description_post_select_image">Select image from gallery</string>
+    <string name="content_description_post_choose_locaion">Choose post\'s location</string>
+    <string name="content_description_post_image">Post\'s image</string>
+    <string name="content_description_post_delete_image">Remove post\'s image</string>
+    <string name="content_description_post_location">Location map</string>
+    <string name="content_description_post_delete_location">Remove post\'s location</string>
+
     <string name="shortcut_newpost_shortlabel">Add</string>
     <string name="shortcut_newpost_longlabel">Add a new post</string>
 </resources>

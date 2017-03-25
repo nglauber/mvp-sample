@@ -89,6 +89,7 @@ class PostFragment : BaseFragment(), PostContract.View {
     override fun showPost(postBinding: PostBinding) {
         post = postBinding
         binding.post = post
+        binding.executePendingBindings()
     }
 
     override fun showImage(uri: String) {

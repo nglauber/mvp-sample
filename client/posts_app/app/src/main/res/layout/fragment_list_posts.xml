@@ -4,50 +4,56 @@
     tools:context=".features.postslist.ListPostsFragment">
 
     <data>
+
         <variable
             name="presenter"
             type="br.com.nglauber.exemplolivro.features.postslist.ListPostsContract.Presenter" />
     </data>
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/post_list_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:clickable="true"
+            android:onClick="@{()->presenter.addNewPost()}"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@drawable/ic_add" />
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/post_list_swipe"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:onRefreshListener="@{()->presenter.loadPosts(true)}">
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <include
+                    android:id="@+id/post_list_empty"
+                    layout="@layout/empty_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/post_list_recyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-
-                <include
-                    android:id="@+id/post_list_empty"
-                    layout="@layout/empty_list" />
             </FrameLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/post_list_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="14dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:clickable="true"
-            android:onClick="@{()->presenter.addNewPost()}"
-            app:fabSize="normal"
-            app:srcCompat="@drawable/ic_add" />
-
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>
