@@ -52,3 +52,24 @@ http://192.168.1.104:8000/webservice.php
 
 You should get a blank page with just a pair of square brackets: []
 
+In the app's `build.gradle` file you can specify the `SERVER_PATH` you chose, like this:
+
+```buildConfigField "String", "SERVER_PATH", "\"http://192.168.1.104:8000/\""```
+
+## Tests
+Before running the tests you should grant `READ_EXTERNAL_STORAGE` permissions to the app with adb from the command line:
+
+```sh
+$ adb shell pm grant br.com.nglauber.exemplolivro android.permission.READ_EXTERNAL_STORAGE
+```
+
+## DataSource
+You can switch the `DataSource` from `PostWeb` to `PostDb` in `PostsModule.kt`
+
+```java 
+    @Provides
+    fun providesDataSource(user : User?) : PostDataSource {
+        //return PostWeb(user?.uuid, application)
+        return PostDb()
+    }
+```
